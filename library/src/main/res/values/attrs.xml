@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="Picker">
+        <attr
+            name="canvasColor"
+            format="color"
+            />
+
+        <attr
+            name="clockColor"
+            format="color"
+            />
+
+        <attr
+            name="textColor"
+            format="color"
+            />
+
+        <attr
+            name="dialColor"
+            format="color"
+            />
+
+        <attr
+            name="hourFormat"
+            format="boolean"
+            />
+    </declare-styleable>
+
+</resources>
