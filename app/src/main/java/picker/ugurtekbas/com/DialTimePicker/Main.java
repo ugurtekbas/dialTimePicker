@@ -18,7 +18,6 @@ public class Main extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        //setContentView(new Library(Main.this));
 
         actionBar  = getSupportActionBar();
         actionBar.setTitle("Dial Time Picker");
