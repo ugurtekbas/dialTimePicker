@@ -50,7 +50,7 @@ picker.getCurrentHour();
 //get current minutes
 picker.getCurrentMin();
 //Set TimeChangedListener
-timePicker.setTimeChangedListener(this);
+picker.setTimeChangedListener(this);
 
 //TimeChangeListener method
 public void timeChanged(Date date){
