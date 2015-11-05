@@ -12,12 +12,14 @@ Calculations in the main class mostly based on [erz05's view.](https://github.co
 
 <H2>Usage</H2>
 ```xml
+
 <picker.ugurtekbas.com.Picker.Picker
         android:id="@+id/picker"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
         
+<!-- or with some attributes in xml -->        
 <picker.ugurtekbas.com.Picker.Picker
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/amPicker"
