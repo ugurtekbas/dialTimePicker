@@ -2,12 +2,12 @@
 A custom time picker library for Android.
 <br>
 As a result of needing a fixed time picker for pre-lollipop devices, for my
-[alarm app](http://android-arsenal.com/details/1/1610) i developed a dial time picker view. 
+[alarm app](https://play.google.com/store/apps/details?id=com.ugurtekbas.alarmshuffle) i developed a dial time picker view. 
 Calculations in the main class mostly based on [erz05's view.](https://github.com/erz05/TimePicker)
 
 <H2>Images</H2>
-<img width="300px" src="https://github.com/ugurtekbas/dialTimePicker/tree/master/images/1.png" />
-<img width="300px" src="https://github.com/ugurtekbas/dialTimePicker/tree/master/images/2.png" />
+<img width="270px" height="480" src="/images/1.png" />
+<img width="270px" height="480" src="/images/2.png" />
 <br>
 
 <H2>Usage</H2>
