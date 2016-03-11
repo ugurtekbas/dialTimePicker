@@ -13,6 +13,23 @@ Calculations in the main class mostly based on [erz05's view.](https://github.co
 <br>
 
 <H2>Usage</H2>
+Gradle Import:
+
+Add the specific repository to your build file:
+```groovy
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+}
+```
+Add the dependency in your build file (do not forget to specify the correct qualifier, usually 'aar'):
+```groovy
+dependencies {
+    compile 'com.github.ugurtekbas:dialTimePicker:4cc8db277d'
+}
+```
+
 ```xml
 
 <picker.ugurtekbas.com.Picker.Picker
