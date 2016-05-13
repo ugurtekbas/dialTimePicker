@@ -30,6 +30,7 @@ public class Picker extends View{
     private int clockColor  = Color.parseColor("#0f9280");
     private int dialColor   = Color.parseColor("#FF9F5B");
     private int canvasColor = Color.parseColor("#2D2D2E");
+    private int trackSize = -1, dialRadiusDP = -1;
     private double angle,degrees;
     private boolean isMoving,amPm,disableTouch,hourFormat,firstRun=true;
     private String hStr,mStr,amPmStr;
@@ -66,8 +67,10 @@ public class Picker extends View{
                 textColor   = typedArray.getColor(R.styleable.Picker_textColor, textColor);
                 clockColor  = typedArray.getColor(R.styleable.Picker_clockColor, clockColor);
                 dialColor   = typedArray.getColor(R.styleable.Picker_dialColor, dialColor);
-                canvasColor = typedArray.getColor(R.styleable.Picker_canvasColor,canvasColor);
-                hourFormat  = typedArray.getBoolean(R.styleable.Picker_hourFormat,hourFormat);
+                canvasColor = typedArray.getColor(R.styleable.Picker_canvasColor, canvasColor);
+                hourFormat  = typedArray.getBoolean(R.styleable.Picker_hourFormat, hourFormat);
+                trackSize  = typedArray.getDimensionPixelSize(R.styleable.Picker_trackSize, trackSize);
+                dialRadiusDP  = typedArray.getDimensionPixelSize(R.styleable.Picker_dialRadius, dialRadiusDP);
             }
         }
     }
@@ -83,7 +86,7 @@ public class Picker extends View{
         offset = min * 0.5f;
         padding = min / 20;
         radius = min / 2 - (padding * 2);
-        dialRadius = radius / 7;
+        dialRadius = dialRadiusDP != -1 ? dialRadiusDP : radius / 7;
         rectF.set(-radius, -radius, radius, radius);
     }
 
@@ -132,7 +135,7 @@ public class Picker extends View{
 
         //clocks dial
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(min / 25);
+        paint.setStrokeWidth(trackSize !=-1 ? trackSize : min / 25);
         paint.setColor(clockColor);
         canvas.drawOval(rectF, paint);
         /////////////////////////////

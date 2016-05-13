@@ -26,6 +26,17 @@
             name="hourFormat"
             format="boolean"
             />
+
+        <attr
+            name="trackSize"
+            format="dimension"
+            />
+
+        <attr
+            name="dialRadius"
+            format="dimension"
+            />
+
     </declare-styleable>
 
 </resources>
