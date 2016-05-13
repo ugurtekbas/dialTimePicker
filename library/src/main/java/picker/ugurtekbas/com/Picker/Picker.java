@@ -18,8 +18,8 @@ import picker.ugurtekbas.com.library.R;
 
 public class Picker extends View{
 
-    private Paint paint;
-    private RectF rectF;
+    private final Paint paint;
+    private final RectF rectF;
 
     private float width,height,min,padding,radius,
             dialRadius,offset,slopX,slopY,posX,posY,
@@ -35,24 +35,18 @@ public class Picker extends View{
     private boolean isMoving,amPm,disableTouch,hourFormat,firstRun=true;
     private String hStr,mStr,amPmStr;
 
-    private TypedArray typedArray;
     private TimeChangedListener timeListener;
 
     public Picker(Context context) {
-        super(context);
-        init(context,null);
+        this(context, null);
     }
 
     public Picker(Context context, AttributeSet attrs){
-        super(context, attrs);
-        init(context, attrs);
+        this(context, attrs, 0);
     }
 
-
-    private void init(Context context,AttributeSet attrs) {
-        angle = (-Math.PI / 2) + .001;
-        hourFormat  =   DateFormat.is24HourFormat(getContext());
-        amPm    =   (Calendar.getInstance().get(Calendar.AM_PM)==0) ? true:false;
+    public Picker(Context context, AttributeSet attrs, int defStyleAttr){
+        super(context, attrs, defStyleAttr);
 
         paint = new Paint();
         paint.setAntiAlias(true);
@@ -61,16 +55,27 @@ public class Picker extends View{
 
         rectF = new RectF();
 
+        angle = (-Math.PI / 2) + .001;
+        hourFormat = DateFormat.is24HourFormat(getContext());
+        amPm = Calendar.getInstance().get(Calendar.AM_PM) == 0;
+
+        loadAttributes(attrs);
+    }
+
+    private void loadAttributes(AttributeSet attrs) {
         if (attrs!=null){
-            typedArray = context.obtainStyledAttributes(attrs, R.styleable.Picker);
+            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.Picker);
+
             if(typedArray != null){
-                textColor   = typedArray.getColor(R.styleable.Picker_textColor, textColor);
-                clockColor  = typedArray.getColor(R.styleable.Picker_clockColor, clockColor);
-                dialColor   = typedArray.getColor(R.styleable.Picker_dialColor, dialColor);
+                textColor = typedArray.getColor(R.styleable.Picker_textColor, textColor);
+                dialColor = typedArray.getColor(R.styleable.Picker_dialColor, dialColor);
+                clockColor = typedArray.getColor(R.styleable.Picker_clockColor, clockColor);
                 canvasColor = typedArray.getColor(R.styleable.Picker_canvasColor, canvasColor);
-                hourFormat  = typedArray.getBoolean(R.styleable.Picker_hourFormat, hourFormat);
-                trackSize  = typedArray.getDimensionPixelSize(R.styleable.Picker_trackSize, trackSize);
-                dialRadiusDP  = typedArray.getDimensionPixelSize(R.styleable.Picker_dialRadius, dialRadiusDP);
+                hourFormat = typedArray.getBoolean(R.styleable.Picker_hourFormat, hourFormat);
+                trackSize = typedArray.getDimensionPixelSize(R.styleable.Picker_trackSize, trackSize);
+                dialRadiusDP = typedArray.getDimensionPixelSize(R.styleable.Picker_dialRadius, dialRadiusDP);
+
+                typedArray.recycle();
             }
         }
     }
