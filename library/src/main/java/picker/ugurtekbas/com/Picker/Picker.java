@@ -21,11 +21,18 @@ public class Picker extends View{
     private final Paint paint;
     private final RectF rectF;
 
-    private float width,height,min,padding,radius,
-            dialRadius,offset,slopX,slopY,posX,posY,
-            dialX,dialY;
+    private float min;
+    private float radius;
+    private float dialRadius;
+    private float offset;
+    private float slopX;
+    private float slopY;
+    private float dialX;
+    private float dialY;
 
-    private int hour,minutes,tmp,previousHour;
+    private int hour;
+    private int minutes;
+    private int previousHour;
     private int textColor   = Color.WHITE;
     private int clockColor  = Color.parseColor("#0f9280");
     private int dialColor   = Color.parseColor("#FF9F5B");
@@ -82,14 +89,14 @@ public class Picker extends View{
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        width = MeasureSpec.getSize(widthMeasureSpec);
-        height = MeasureSpec.getSize(heightMeasureSpec);
+        float width = MeasureSpec.getSize(widthMeasureSpec);
+        float height = MeasureSpec.getSize(heightMeasureSpec);
 
         min = Math.min(width, height);
         setMeasuredDimension((int) min, (int) min);
 
         offset = min * 0.5f;
-        padding = min / 20;
+        float padding = min / 20;
         radius = min / 2 - (padding * 2);
         dialRadius = dialRadiusDP != -1 ? dialRadiusDP : radius / 7;
         rectF.set(-radius, -radius, radius, radius);
@@ -184,8 +191,8 @@ public class Picker extends View{
             if (disableTouch) return false;
             getParent().requestDisallowInterceptTouchEvent(true);
 
-            posX = event.getX() - offset;
-            posY = event.getY() - offset;
+            float posX = event.getX() - offset;
+            float posY = event.getY() - offset;
 
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -288,7 +295,8 @@ public class Picker extends View{
 
     public Date getTime() {
         Calendar calendar = Calendar.getInstance();
-        tmp = hour;
+        int tmp = hour;
+
         if (!amPm) {
             if (tmp < 12) tmp += 12;
         } else {
