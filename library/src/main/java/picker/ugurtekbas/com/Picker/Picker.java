@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.RectF;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import java.util.Calendar;
@@ -15,7 +16,9 @@ import java.util.Date;
 
 import picker.ugurtekbas.com.library.R;
 
-
+/**
+ * Created by ugur on 10.05.2015.
+ */
 public class Picker extends View{
 
     private final Paint paint;
@@ -33,10 +36,10 @@ public class Picker extends View{
     private int hour;
     private int minutes;
     private int previousHour;
-    private int textColor   = Color.WHITE;
+    private int textColor   = Color.BLACK;
     private int clockColor  = Color.parseColor("#0f9280");
     private int dialColor   = Color.parseColor("#FF9F5B");
-    private int canvasColor = Color.parseColor("#2D2D2E");
+    private int canvasColor = Color.TRANSPARENT;
     private int trackSize = -1, dialRadiusDP = -1;
     private double angle,degrees;
     private boolean isMoving,amPm,disableTouch,hourFormat,firstRun=true;
@@ -66,10 +69,27 @@ public class Picker extends View{
         hourFormat = DateFormat.is24HourFormat(getContext());
         amPm = Calendar.getInstance().get(Calendar.AM_PM) == 0;
 
+        loadAppThemeDefaults();
         loadAttributes(attrs);
     }
 
+    private void loadAppThemeDefaults() {
+        TypedValue typedValue = new TypedValue();
+
+        TypedArray a = getContext().obtainStyledAttributes(typedValue.data, new int[] {
+                R.attr.colorAccent,
+                android.R.attr.textColorPrimary,
+                R.attr.colorControlNormal});
+
+        dialColor = a.getColor(0, dialColor);
+        textColor = a.getColor(1, textColor);
+        clockColor = a.getColor(2, clockColor);
+
+        a.recycle();
+    }
+
     private void loadAttributes(AttributeSet attrs) {
+
         if (attrs!=null){
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.Picker);
 
