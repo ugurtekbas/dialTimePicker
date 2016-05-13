@@ -5,7 +5,10 @@ import android.graphics.Paint;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.graphics.Xfermode;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -23,6 +26,7 @@ public class Picker extends View{
 
     private final Paint paint;
     private final RectF rectF;
+    private final Xfermode dialXferMode = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
 
     private float min;
     private float radius;
@@ -57,6 +61,9 @@ public class Picker extends View{
 
     public Picker(Context context, AttributeSet attrs, int defStyleAttr){
         super(context, attrs, defStyleAttr);
+        if (android.os.Build.VERSION.SDK_INT >= 11)  {
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
 
         paint = new Paint();
         paint.setAntiAlias(true);
@@ -108,6 +115,12 @@ public class Picker extends View{
     }
 
     @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        invalidate();
+    }
+
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         float width = MeasureSpec.getSize(widthMeasureSpec);
         float height = MeasureSpec.getSize(heightMeasureSpec);
@@ -124,11 +137,10 @@ public class Picker extends View{
 
     @Override
     protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
         canvas.translate(offset, offset);
         canvas.drawColor(canvasColor);
-        paint.setStrokeWidth(1);
-        paint.setStyle(Paint.Style.FILL);
-        paint.setAlpha(255);
 
         if (firstRun){
             setFirstTime();
@@ -157,7 +169,9 @@ public class Picker extends View{
 
         previousHour = hour;
 
+        paint.setStyle(Paint.Style.FILL);
         paint.setColor(textColor);
+        paint.setAlpha(isEnabled() ? paint.getAlpha() : 77);
         paint.setTextSize(min / 5);
         //the text which shows time
         hStr = (hour < 10) ? "0" + hour : hour + "";
@@ -169,17 +183,22 @@ public class Picker extends View{
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(trackSize !=-1 ? trackSize : min / 25);
         paint.setColor(clockColor);
+        paint.setAlpha(isEnabled() ? paint.getAlpha() : 77);
         canvas.drawOval(rectF, paint);
         /////////////////////////////
 
         //small circle t adjust time
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(dialColor);
-        paint.setAlpha(255);
-
         calculatePointerPosition(angle);
+
+        paint.setStyle(Paint.Style.FILL);
+        paint.setAlpha(0);
+        paint.setXfermode(dialXferMode);
         canvas.drawCircle(dialX, dialY, dialRadius, paint);
 
+        paint.setColor(dialColor);
+        paint.setAlpha(isEnabled() ? paint.getAlpha() : 77);
+        paint.setXfermode(null);
+        canvas.drawCircle(dialX, dialY, dialRadius, paint);
     }
 
     public void setFirstTime(){
@@ -208,7 +227,7 @@ public class Picker extends View{
 
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            if (disableTouch) return false;
+            if (disableTouch || !isEnabled()) return false;
             getParent().requestDisallowInterceptTouchEvent(true);
 
             float posX = event.getX() - offset;
