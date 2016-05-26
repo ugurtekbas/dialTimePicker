@@ -5,9 +5,13 @@ import android.graphics.Paint;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.graphics.Xfermode;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import java.util.Calendar;
@@ -15,44 +19,51 @@ import java.util.Date;
 
 import picker.ugurtekbas.com.library.R;
 
-
+/**
+ * Created by ugur on 10.05.2015.
+ */
 public class Picker extends View{
 
-    private Paint paint;
-    private RectF rectF;
+    private final Paint paint;
+    private final RectF rectF;
+    private final Xfermode dialXferMode = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
 
-    private float width,height,min,padding,radius,
-            dialRadius,offset,slopX,slopY,posX,posY,
-            dialX,dialY;
+    private float min;
+    private float radius;
+    private float dialRadius;
+    private float offset;
+    private float slopX;
+    private float slopY;
+    private float dialX;
+    private float dialY;
 
-    private int hour,minutes,tmp,previousHour;
-    private int textColor   = Color.WHITE;
+    private int hour;
+    private int minutes;
+    private int previousHour;
+    private int textColor   = Color.BLACK;
     private int clockColor  = Color.parseColor("#0f9280");
     private int dialColor   = Color.parseColor("#FF9F5B");
-    private int canvasColor = Color.parseColor("#2D2D2E");
+    private int canvasColor = Color.TRANSPARENT;
     private int trackSize = -1, dialRadiusDP = -1;
     private double angle,degrees;
     private boolean isMoving,amPm,disableTouch,hourFormat,firstRun=true;
     private String hStr,mStr,amPmStr;
 
-    private TypedArray typedArray;
     private TimeChangedListener timeListener;
 
     public Picker(Context context) {
-        super(context);
-        init(context,null);
+        this(context, null);
     }
 
     public Picker(Context context, AttributeSet attrs){
-        super(context, attrs);
-        init(context, attrs);
+        this(context, attrs, 0);
     }
 
-
-    private void init(Context context,AttributeSet attrs) {
-        angle = (-Math.PI / 2) + .001;
-        hourFormat  =   DateFormat.is24HourFormat(getContext());
-        amPm    =   (Calendar.getInstance().get(Calendar.AM_PM)==0) ? true:false;
+    public Picker(Context context, AttributeSet attrs, int defStyleAttr){
+        super(context, attrs, defStyleAttr);
+        if (android.os.Build.VERSION.SDK_INT >= 11)  {
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
 
         paint = new Paint();
         paint.setAntiAlias(true);
@@ -61,30 +72,64 @@ public class Picker extends View{
 
         rectF = new RectF();
 
+        angle = (-Math.PI / 2) + .001;
+        hourFormat = DateFormat.is24HourFormat(getContext());
+        amPm = Calendar.getInstance().get(Calendar.AM_PM) == 0;
+
+        loadAppThemeDefaults();
+        loadAttributes(attrs);
+    }
+
+    private void loadAppThemeDefaults() {
+        TypedValue typedValue = new TypedValue();
+
+        TypedArray a = getContext().obtainStyledAttributes(typedValue.data, new int[] {
+                R.attr.colorAccent,
+                android.R.attr.textColorPrimary,
+                R.attr.colorControlNormal});
+
+        dialColor = a.getColor(0, dialColor);
+        textColor = a.getColor(1, textColor);
+        clockColor = a.getColor(2, clockColor);
+
+        a.recycle();
+    }
+
+    private void loadAttributes(AttributeSet attrs) {
+
         if (attrs!=null){
-            typedArray = context.obtainStyledAttributes(attrs, R.styleable.Picker);
+            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.Picker);
+
             if(typedArray != null){
-                textColor   = typedArray.getColor(R.styleable.Picker_textColor, textColor);
-                clockColor  = typedArray.getColor(R.styleable.Picker_clockColor, clockColor);
-                dialColor   = typedArray.getColor(R.styleable.Picker_dialColor, dialColor);
+                textColor = typedArray.getColor(R.styleable.Picker_textColor, textColor);
+                dialColor = typedArray.getColor(R.styleable.Picker_dialColor, dialColor);
+                clockColor = typedArray.getColor(R.styleable.Picker_clockColor, clockColor);
                 canvasColor = typedArray.getColor(R.styleable.Picker_canvasColor, canvasColor);
-                hourFormat  = typedArray.getBoolean(R.styleable.Picker_hourFormat, hourFormat);
-                trackSize  = typedArray.getDimensionPixelSize(R.styleable.Picker_trackSize, trackSize);
-                dialRadiusDP  = typedArray.getDimensionPixelSize(R.styleable.Picker_dialRadius, dialRadiusDP);
+                hourFormat = typedArray.getBoolean(R.styleable.Picker_hourFormat, hourFormat);
+                trackSize = typedArray.getDimensionPixelSize(R.styleable.Picker_trackSize, trackSize);
+                dialRadiusDP = typedArray.getDimensionPixelSize(R.styleable.Picker_dialRadius, dialRadiusDP);
+
+                typedArray.recycle();
             }
         }
     }
 
     @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        invalidate();
+    }
+
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        width = MeasureSpec.getSize(widthMeasureSpec);
-        height = MeasureSpec.getSize(heightMeasureSpec);
+        float width = MeasureSpec.getSize(widthMeasureSpec);
+        float height = MeasureSpec.getSize(heightMeasureSpec);
 
         min = Math.min(width, height);
         setMeasuredDimension((int) min, (int) min);
 
         offset = min * 0.5f;
-        padding = min / 20;
+        float padding = min / 20;
         radius = min / 2 - (padding * 2);
         dialRadius = dialRadiusDP != -1 ? dialRadiusDP : radius / 7;
         rectF.set(-radius, -radius, radius, radius);
@@ -92,11 +137,10 @@ public class Picker extends View{
 
     @Override
     protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
         canvas.translate(offset, offset);
         canvas.drawColor(canvasColor);
-        paint.setStrokeWidth(1);
-        paint.setStyle(Paint.Style.FILL);
-        paint.setAlpha(255);
 
         if (firstRun){
             setFirstTime();
@@ -125,7 +169,9 @@ public class Picker extends View{
 
         previousHour = hour;
 
+        paint.setStyle(Paint.Style.FILL);
         paint.setColor(textColor);
+        paint.setAlpha(isEnabled() ? paint.getAlpha() : 77);
         paint.setTextSize(min / 5);
         //the text which shows time
         hStr = (hour < 10) ? "0" + hour : hour + "";
@@ -137,17 +183,22 @@ public class Picker extends View{
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(trackSize !=-1 ? trackSize : min / 25);
         paint.setColor(clockColor);
+        paint.setAlpha(isEnabled() ? paint.getAlpha() : 77);
         canvas.drawOval(rectF, paint);
         /////////////////////////////
 
         //small circle t adjust time
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(dialColor);
-        paint.setAlpha(255);
-
         calculatePointerPosition(angle);
+
+        paint.setStyle(Paint.Style.FILL);
+        paint.setAlpha(0);
+        paint.setXfermode(dialXferMode);
         canvas.drawCircle(dialX, dialY, dialRadius, paint);
 
+        paint.setColor(dialColor);
+        paint.setAlpha(isEnabled() ? paint.getAlpha() : 77);
+        paint.setXfermode(null);
+        canvas.drawCircle(dialX, dialY, dialRadius, paint);
     }
 
     public void setFirstTime(){
@@ -176,11 +227,11 @@ public class Picker extends View{
 
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            if (disableTouch) return false;
+            if (disableTouch || !isEnabled()) return false;
             getParent().requestDisallowInterceptTouchEvent(true);
 
-            posX = event.getX() - offset;
-            posY = event.getY() - offset;
+            float posX = event.getX() - offset;
+            float posY = event.getY() - offset;
 
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -283,7 +334,8 @@ public class Picker extends View{
 
     public Date getTime() {
         Calendar calendar = Calendar.getInstance();
-        tmp = hour;
+        int tmp = hour;
+
         if (!amPm) {
             if (tmp < 12) tmp += 12;
         } else {
