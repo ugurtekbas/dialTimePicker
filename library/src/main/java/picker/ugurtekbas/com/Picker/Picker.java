@@ -9,6 +9,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Xfermode;
+import android.support.annotation.NonNull;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -143,7 +144,7 @@ public class Picker extends View{
         canvas.drawColor(canvasColor);
 
         if (firstRun){
-            setFirstTime();
+            setFirstTime(Calendar.getInstance().getTime());
         }else {
             //Rad to Deg
             degrees = (Math.toDegrees(angle) + 90) % 360;
@@ -201,9 +202,15 @@ public class Picker extends View{
         canvas.drawCircle(dialX, dialY, dialRadius, paint);
     }
 
-    public void setFirstTime(){
+    /**
+     * Sets the time from which the picker's going to be initialized
+     *
+     * @param date the initial time
+     */
+    public void setFirstTime(@NonNull final Date date){
         int firstHour;
-        Calendar cal    =   Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
         minutes = cal.get(Calendar.MINUTE);
         mStr = (minutes < 10) ? "0" + minutes : minutes + "";
         if (hourFormat){
