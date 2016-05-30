@@ -350,4 +350,29 @@ public class Picker extends View{
     public void setTimeChangedListener(TimeChangedListener timeChangedListener){
         this.timeListener = timeChangedListener;
     }
+
+    /***
+     * Use this method to init with your value
+     * @param hour
+     * @param minutes
+     */
+    public void initTime(int hour, int minutes) {
+        this.hour = hour;
+        this.minutes= minutes;
+        this.firstRun = true;
+        mStr = (minutes < 10) ? "0" + minutes : minutes + "";
+        if (hourFormat){
+            amPmStr="";
+
+            degrees = ((hour%24)*15) + ((minutes%60)/4);
+        }else{
+            if(hour == 0) hour = 12;
+            if ((hour == 12 && previousHour == 11) || (hour == 11 && previousHour == 12)) amPm = !amPm;
+            amPmStr = amPm ? "AM" : "PM";
+            degrees = ((hour%12)*30) + ((minutes%60)/2);
+        }
+        angle   =   Math.toRadians(degrees) - (Math.PI/2);
+
+        firstRun    =   false;
+    }
 }
