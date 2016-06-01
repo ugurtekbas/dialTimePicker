@@ -1,10 +1,10 @@
 package picker.ugurtekbas.com.Picker;
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
@@ -14,6 +14,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -22,7 +23,7 @@ import picker.ugurtekbas.com.library.R;
 /**
  * Created by ugur on 10.05.2015.
  */
-public class Picker extends View{
+public class Picker extends View {
 
     private final Paint paint;
     private final RectF rectF;
@@ -40,14 +41,14 @@ public class Picker extends View{
     private int hour;
     private int minutes;
     private int previousHour;
-    private int textColor   = Color.BLACK;
-    private int clockColor  = Color.parseColor("#0f9280");
-    private int dialColor   = Color.parseColor("#FF9F5B");
+    private int textColor = Color.BLACK;
+    private int clockColor = Color.parseColor("#0f9280");
+    private int dialColor = Color.parseColor("#FF9F5B");
     private int canvasColor = Color.TRANSPARENT;
     private int trackSize = -1, dialRadiusDP = -1;
-    private double angle,degrees;
-    private boolean isMoving,amPm,disableTouch,hourFormat,firstRun=true;
-    private String hStr,mStr,amPmStr;
+    private double angle, degrees;
+    private boolean isMoving, amPm, disableTouch, hourFormat, firstRun = true;
+    private String hStr, mStr, amPmStr;
 
     private TimeChangedListener timeListener;
 
@@ -55,13 +56,13 @@ public class Picker extends View{
         this(context, null);
     }
 
-    public Picker(Context context, AttributeSet attrs){
+    public Picker(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public Picker(Context context, AttributeSet attrs, int defStyleAttr){
+    public Picker(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        if (android.os.Build.VERSION.SDK_INT >= 11)  {
+        if (android.os.Build.VERSION.SDK_INT >= 11) {
             setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
 
@@ -83,7 +84,7 @@ public class Picker extends View{
     private void loadAppThemeDefaults() {
         TypedValue typedValue = new TypedValue();
 
-        TypedArray a = getContext().obtainStyledAttributes(typedValue.data, new int[] {
+        TypedArray a = getContext().obtainStyledAttributes(typedValue.data, new int[]{
                 R.attr.colorAccent,
                 android.R.attr.textColorPrimary,
                 R.attr.colorControlNormal});
@@ -97,10 +98,10 @@ public class Picker extends View{
 
     private void loadAttributes(AttributeSet attrs) {
 
-        if (attrs!=null){
+        if (attrs != null) {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.Picker);
 
-            if(typedArray != null){
+            if (typedArray != null) {
                 textColor = typedArray.getColor(R.styleable.Picker_textColor, textColor);
                 dialColor = typedArray.getColor(R.styleable.Picker_dialColor, dialColor);
                 clockColor = typedArray.getColor(R.styleable.Picker_clockColor, clockColor);
@@ -142,27 +143,31 @@ public class Picker extends View{
         canvas.translate(offset, offset);
         canvas.drawColor(canvasColor);
 
-        if (firstRun){
-            setFirstTime();
-        }else {
+        if (firstRun) {
+            Calendar cal = Calendar.getInstance();
+            minutes = cal.get(Calendar.MINUTE);
+            hour = cal.get(Calendar.HOUR_OF_DAY);
+            initTime(hour, minutes);
+        } else {
             //Rad to Deg
             degrees = (Math.toDegrees(angle) + 90) % 360;
             degrees = (degrees + 360) % 360;
 
             //get AM/PM
-            if (hourFormat){
+            if (hourFormat) {
                 hour = ((int) degrees / 15) % 24;
                 minutes = ((int) (degrees * 4)) % 60;
                 mStr = (minutes < 10) ? "0" + minutes : minutes + "";
-                amPmStr="";
-            }else{
-                hour = ((int)degrees / 30) % 12;
-                if(hour == 0) hour = 12;
+                amPmStr = "";
+            } else {
+                hour = ((int) degrees / 30) % 12;
+                if (hour == 0) hour = 12;
                 //get Minutes
                 minutes = ((int) (degrees * 2)) % 60;
                 mStr = (minutes < 10) ? "0" + minutes : minutes + "";
                 //AM-PM
-                if ((hour == 12 && previousHour == 11) || (hour == 11 && previousHour == 12)) amPm = !amPm;
+                if ((hour == 12 && previousHour == 11) || (hour == 11 && previousHour == 12))
+                    amPm = !amPm;
                 amPmStr = amPm ? "AM" : "PM";
             }
         }
@@ -181,7 +186,7 @@ public class Picker extends View{
 
         //clocks dial
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(trackSize !=-1 ? trackSize : min / 25);
+        paint.setStrokeWidth(trackSize != -1 ? trackSize : min / 25);
         paint.setColor(clockColor);
         paint.setAlpha(isEnabled() ? paint.getAlpha() : 77);
         canvas.drawOval(rectF, paint);
@@ -201,101 +206,78 @@ public class Picker extends View{
         canvas.drawCircle(dialX, dialY, dialRadius, paint);
     }
 
-    public void setFirstTime(){
-        int firstHour;
-        Calendar cal    =   Calendar.getInstance();
-        minutes = cal.get(Calendar.MINUTE);
-        mStr = (minutes < 10) ? "0" + minutes : minutes + "";
-        if (hourFormat){
-            firstHour = cal.get(Calendar.HOUR_OF_DAY);
-            hour =  cal.get(Calendar.HOUR_OF_DAY);
-            amPmStr="";
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (disableTouch || !isEnabled()) return false;
+        getParent().requestDisallowInterceptTouchEvent(true);
 
-            degrees = ((firstHour%24)*15) + ((minutes%60)/4);
-        }else{
-            firstHour = cal.get(Calendar.HOUR);
-            hour = cal.get(Calendar.HOUR);
-            if(hour == 0) hour = 12;
-            if ((hour == 12 && previousHour == 11) || (hour == 11 && previousHour == 12)) amPm = !amPm;
-            amPmStr = amPm ? "AM" : "PM";
-            degrees = ((firstHour%12)*30) + ((minutes%60)/2);
-        }
-        angle   =   Math.toRadians(degrees) - (Math.PI/2);
+        float posX = event.getX() - offset;
+        float posY = event.getY() - offset;
 
-        firstRun    =   false;
-    }
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                calculatePointerPosition(angle);
+                if (posX >= (dialX - dialRadius) &&
+                        posX <= (dialX + dialRadius) &&
+                        posY >= (dialY - dialRadius) &&
+                        posY <= (dialY + dialRadius)) {
 
-        @Override
-        public boolean onTouchEvent(MotionEvent event) {
-            if (disableTouch || !isEnabled()) return false;
-            getParent().requestDisallowInterceptTouchEvent(true);
-
-            float posX = event.getX() - offset;
-            float posY = event.getY() - offset;
-
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    calculatePointerPosition(angle);
-                    if (posX >= (dialX - dialRadius) &&
-                            posX <= (dialX + dialRadius) &&
-                            posY >= (dialY - dialRadius) &&
-                            posY <= (dialY + dialRadius)) {
-
-                        slopX = posX - dialX;
-                        slopY = posY - dialY;
-                        isMoving = true;
-                        invalidate();
-                    } else {
-                        getParent().requestDisallowInterceptTouchEvent(false);
-                        return false;
-                    }
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    if (isMoving) {
-                        angle = (float) Math.atan2(posY - slopY, posX - slopX);
-                        if(timeListener!=null){
-                            timeListener.timeChanged(getTime());
-                        }
-                        invalidate();
-                    } else {
-                        getParent().requestDisallowInterceptTouchEvent(false);
-                        return false;
-                    }
-                    break;
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_CANCEL:
-                    isMoving = false;
+                    slopX = posX - dialX;
+                    slopY = posY - dialY;
+                    isMoving = true;
                     invalidate();
-                    break;
-            }
-
-            return true;
+                } else {
+                    getParent().requestDisallowInterceptTouchEvent(false);
+                    return false;
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (isMoving) {
+                    angle = (float) Math.atan2(posY - slopY, posX - slopX);
+                    if (timeListener != null) {
+                        timeListener.timeChanged(getTime());
+                    }
+                    invalidate();
+                } else {
+                    getParent().requestDisallowInterceptTouchEvent(false);
+                    return false;
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                isMoving = false;
+                invalidate();
+                break;
         }
+
+        return true;
+    }
 
     private void calculatePointerPosition(double angle) {
         dialX = (float) (radius * Math.cos(angle));
         dialY = (float) (radius * Math.sin(angle));
     }
 
-    public int getCurrentHour(){
-        int currentHour =   hour;
-        if (hourFormat){
+    public int getCurrentHour() {
+        int currentHour = hour;
+        if (hourFormat) {
             return currentHour;
-        }else{
-            if (amPm){
-                if (currentHour==12){
-                    currentHour=0;
+        } else {
+            if (amPm) {
+                if (currentHour == 12) {
+                    currentHour = 0;
                 }
-            }else{
+            } else {
                 //PM
-                if (currentHour<12){
-                    currentHour +=12;
+                if (currentHour < 12) {
+                    currentHour += 12;
                 }
             }
             return currentHour;
         }
     }
-    public int getCurrentMin(){
+
+    public int getCurrentMin() {
 
         return minutes;
     }
@@ -315,7 +297,7 @@ public class Picker extends View{
         invalidate();
     }
 
-    public void setCanvasColor(int canvasColor){
+    public void setCanvasColor(int canvasColor) {
         this.canvasColor = canvasColor;
         invalidate();
     }
@@ -328,7 +310,7 @@ public class Picker extends View{
         this.hourFormat = format;
     }
 
-    public String getAmPM(){
+    public String getAmPM() {
         return this.amPmStr;
     }
 
@@ -347,7 +329,34 @@ public class Picker extends View{
         return calendar.getTime();
     }
 
-    public void setTimeChangedListener(TimeChangedListener timeChangedListener){
+    public void setTimeChangedListener(TimeChangedListener timeChangedListener) {
         this.timeListener = timeChangedListener;
+    }
+
+    /***
+     * Use this method to init with your value
+     *
+     * @param hour
+     * @param minutes
+     */
+    public void initTime(int hour, int minutes) {
+        this.hour = hour;
+        this.minutes = minutes;
+        this.firstRun = true;
+        mStr = (minutes < 10) ? "0" + minutes : minutes + "";
+        if (hourFormat) {
+            amPmStr = "";
+
+            degrees = ((hour % 24) * 15) + ((minutes % 60) / 4);
+        } else {
+            if (hour == 0) hour = 12;
+            if ((hour == 12 && previousHour == 11) || (hour == 11 && previousHour == 12))
+                amPm = !amPm;
+            amPmStr = amPm ? "AM" : "PM";
+            degrees = ((hour % 12) * 30) + ((minutes % 60) / 2);
+        }
+        angle = Math.toRadians(degrees) - (Math.PI / 2);
+
+        firstRun = false;
     }
 }

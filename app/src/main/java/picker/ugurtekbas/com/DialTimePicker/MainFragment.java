@@ -52,6 +52,7 @@ public class MainFragment extends Fragment{
             Picker  picker2 =   (Picker)v.findViewById(R.id.amPicker);
             picker2.setClockColor(Color.parseColor("#FF9F5B"));
             picker2.setDialColor(Color.parseColor("#0f9280"));
+            picker2.initTime(5,2);
         }else{
             final Picker  picker1 =   (Picker)v.findViewById(R.id.picker);
             final TextView et =  (TextView)v.findViewById(R.id.et);
@@ -73,6 +74,8 @@ public class MainFragment extends Fragment{
                     picker1.setEnabled(isChecked);
                 }
             });
+            picker1.initTime(5,2);
+
         }
 
 
