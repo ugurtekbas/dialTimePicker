@@ -48,6 +48,8 @@ dependencies {
         app:hourFormat="false"
         app:canvasColor="#ffffff"
         app:textColor="#000000"
+        app:trackSize="20dp"
+        app:dialRadius="60dp"
         />
 ```
 
@@ -70,6 +72,14 @@ picker.setHourFormat(true);
 picker.getCurrentHour();
 //get current minutes
 picker.getCurrentMin();
+//Diasble/enable the picker 
+picker.setEnabled(false);
+//Set dial's size
+picker.setTrackSize(20);
+//Set adjuster's size
+setDialRadiusDP(60);
+//Initialize picker's time
+picker2.initTime(9,0);
 //Set TimeChangedListener
 picker.setTimeChangedListener(this);
 
