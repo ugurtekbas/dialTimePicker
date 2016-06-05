@@ -302,6 +302,14 @@ public class Picker extends View {
         invalidate();
     }
 
+    public void setTrackSize(int trackSize) {
+        this.trackSize = trackSize;
+    }
+
+    public void setDialRadiusDP(int dialRadiusDP) {
+        this.dialRadiusDP = dialRadiusDP;
+    }
+
     public void disableTouch(boolean disableTouch) {
         this.disableTouch = disableTouch;
     }
@@ -334,7 +342,18 @@ public class Picker extends View {
     }
 
     /***
-     * Use this method to init with your value
+     * Use this method to set picker's time
+     *
+     * @param hour
+     * @param minutes
+     */
+    public void setTime(int hour, int minutes){
+        initTime(hour,minutes);
+        this.invalidate();
+    }
+
+    /***
+     * Use this method to initialize picker's time
      *
      * @param hour
      * @param minutes
@@ -359,4 +378,5 @@ public class Picker extends View {
 
         firstRun = false;
     }
+
 }

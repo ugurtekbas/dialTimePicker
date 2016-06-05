@@ -5,6 +5,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:checked="true"
+        android:text="Picker enabled"
+        android:layout_margin="5dp"
+        />
+
     <picker.ugurtekbas.com.Picker.Picker
         android:id="@+id/amPicker"
         android:layout_width="match_parent"
