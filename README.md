@@ -26,7 +26,7 @@ repositories {
 Add the dependency in your build file (do not forget to specify the correct qualifier, usually 'aar'):
 ```groovy
 dependencies {
-    compile 'com.github.ugurtekbas:dialTimePicker:4386944980'
+    compile 'com.github.ugurtekbas:dialTimePicker:9f4af78e90'
 }
 ```
 
@@ -79,7 +79,7 @@ picker.setTrackSize(20);
 //Set adjuster's size
 setDialRadiusDP(60);
 //Initialize picker's time
-picker2.initTime(9,0);
+picker.initTime(9,0);
 //Set TimeChangedListener
 picker.setTimeChangedListener(this);
 
