@@ -21,7 +21,7 @@ import java.util.Date;
 import picker.ugurtekbas.com.library.R;
 
 /**
- * Created by ugur on 10.05.2015.
+ * Created by ugurtekbas on 10.05.2015.
  */
 public class Picker extends View {
 
@@ -81,6 +81,10 @@ public class Picker extends View {
         loadAttributes(attrs);
     }
 
+    /**
+     * Set default theme attributes for picker
+     * Theese will be used if picker's attributes are'nt set
+     */
     private void loadAppThemeDefaults() {
         TypedValue typedValue = new TypedValue();
 
@@ -96,8 +100,11 @@ public class Picker extends View {
         a.recycle();
     }
 
+    /**
+     * Set picker's attrinbutes from xml file
+     * @param attrs
+     */
     private void loadAttributes(AttributeSet attrs) {
-
         if (attrs != null) {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.Picker);
 
@@ -166,8 +173,9 @@ public class Picker extends View {
                 minutes = ((int) (degrees * 2)) % 60;
                 mStr = (minutes < 10) ? "0" + minutes : minutes + "";
                 //AM-PM
-                if ((hour == 12 && previousHour == 11) || (hour == 11 && previousHour == 12))
+                if ((hour == 12 && previousHour == 11) || (hour == 11 && previousHour == 12)) {
                     amPm = !amPm;
+                }
                 amPmStr = amPm ? "AM" : "PM";
             }
         }
@@ -209,6 +217,7 @@ public class Picker extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (disableTouch || !isEnabled()) return false;
+
         getParent().requestDisallowInterceptTouchEvent(true);
 
         float posX = event.getX() - offset;
@@ -278,7 +287,6 @@ public class Picker extends View {
     }
 
     public int getCurrentMin() {
-
         return minutes;
     }
 
@@ -302,14 +310,26 @@ public class Picker extends View {
         invalidate();
     }
 
+    /**
+     * To set dial's size
+     * @param trackSize
+     */
     public void setTrackSize(int trackSize) {
         this.trackSize = trackSize;
     }
 
+    /**
+     * To set adjuster's size
+     * @param dialRadiusDP
+     */
     public void setDialRadiusDP(int dialRadiusDP) {
         this.dialRadiusDP = dialRadiusDP;
     }
 
+    /**
+     * To diasble/enable the picker
+     * @param disableTouch
+     */
     public void disableTouch(boolean disableTouch) {
         this.disableTouch = disableTouch;
     }
@@ -365,7 +385,6 @@ public class Picker extends View {
         mStr = (minutes < 10) ? "0" + minutes : minutes + "";
         if (hourFormat) {
             amPmStr = "";
-
             degrees = ((hour % 24) * 15) + ((minutes % 60) / 4);
         } else {
             if (hour == 0) hour = 12;
