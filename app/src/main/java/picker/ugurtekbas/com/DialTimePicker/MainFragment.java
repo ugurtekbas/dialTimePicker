@@ -1,6 +1,5 @@
 package picker.ugurtekbas.com.DialTimePicker;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -47,8 +46,8 @@ public class MainFragment extends Fragment{
 
         if (layoutID==R.layout.ampm_picker){
             final Picker  picker2 =   (Picker)v.findViewById(R.id.amPicker);
-            picker2.setClockColor(Color.parseColor("#FF9F5B"));
-            picker2.setDialColor(Color.parseColor("#0f9280"));
+            picker2.setClockColor(getResources().getColor(R.color.clockColor));
+            picker2.setDialColor(getResources().getColor(R.color.clockColor));
             picker2.initTime(9,0);
             picker2.setTrackSize(20);
             picker2.setDialRadiusDP(60);

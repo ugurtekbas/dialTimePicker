@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:checked="true"
-        android:text="Picker enabled"
+        android:text="@string/pickerEnable"
         android:layout_margin="5dp"
         />
 

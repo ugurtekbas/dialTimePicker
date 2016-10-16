@@ -20,7 +20,7 @@ public class Main extends ActionBarActivity {
         setContentView(R.layout.main);
 
         actionBar  = getSupportActionBar();
-        actionBar.setTitle("Dial Time Picker");
+        actionBar.setTitle(getResources().getString(R.string.appTitle));
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         viewPager.setAdapter(new ActivityAdapter(getSupportFragmentManager()));
     }
