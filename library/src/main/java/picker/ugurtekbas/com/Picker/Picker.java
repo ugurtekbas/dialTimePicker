@@ -29,18 +29,8 @@ public class Picker extends View {
     private final RectF rectF;
     private final Xfermode dialXferMode = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
 
-    private float min;
-    private float radius;
-    private float dialRadius;
-    private float offset;
-    private float slopX;
-    private float slopY;
-    private float dialX;
-    private float dialY;
-
-    private int hour;
-    private int minutes;
-    private int previousHour;
+    private float min, radius, dialRadius, offset, slopX, slopY, dialX, dialY;
+    private int hour, minutes, previousHour;
     private int textColor = Color.BLACK;
     private int clockColor = Color.parseColor("#0f9280");
     private int dialColor = Color.parseColor("#FF9F5B");
@@ -82,8 +72,8 @@ public class Picker extends View {
     }
 
     /**
-     * Set default theme attributes for picker
-     * Theese will be used if picker's attributes are'nt set
+     * Sets default theme attributes for picker
+     * These will be used if picker's attributes are'nt set
      */
     private void loadAppThemeDefaults() {
         TypedValue typedValue = new TypedValue();
@@ -101,7 +91,7 @@ public class Picker extends View {
     }
 
     /**
-     * Set picker's attrinbutes from xml file
+     * Sets picker's attributes from xml file
      * @param attrs
      */
     private void loadAttributes(AttributeSet attrs) {
@@ -214,7 +204,6 @@ public class Picker extends View {
         paint.setColor(clockColor);
         paint.setAlpha(isEnabled() ? paint.getAlpha() : 77);
         canvas.drawOval(rectF, paint);
-        /////////////////////////////
 
         //small circle t adjust time
         calculatePointerPosition(angle);
@@ -345,7 +334,7 @@ public class Picker extends View {
     }
 
     /**
-     * To diasble/enable the picker
+     * To disable/enable the picker
      * @param disableTouch
      */
     public void disableTouch(boolean disableTouch) {
@@ -380,8 +369,7 @@ public class Picker extends View {
     }
 
     /***
-     * Use this method to set picker's time
-     *
+     * This method is used to set picker's time
      * @param hour
      * @param minutes
      */
@@ -391,8 +379,7 @@ public class Picker extends View {
     }
 
     /***
-     * Use this method to initialize picker's time
-     *
+     * This method is used to initialize picker's time
      * @param hour
      * @param minutes
      */
