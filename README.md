@@ -26,7 +26,7 @@ repositories {
 Add the dependency in your build file (do not forget to specify the correct qualifier, usually 'aar'):
 ```groovy
 dependencies {
-    compile 'com.github.ugurtekbas:dialTimePicker:9f4af78e90'
+    compile 'com.github.ugurtekbas:dialTimePicker:69ba769f45'
 }
 ```
 
@@ -89,7 +89,7 @@ public void timeChanged(Date date){
 
 ```
 <H2>License</H2>
-    Copyright 2016 ugurtekbas
+    Copyright 2016 Ugur Tekbas
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
