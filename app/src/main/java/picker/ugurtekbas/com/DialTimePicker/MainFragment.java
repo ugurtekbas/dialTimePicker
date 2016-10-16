@@ -47,8 +47,8 @@ public class MainFragment extends Fragment{
         if (layoutID==R.layout.ampm_picker){
             final Picker  picker2 =   (Picker)v.findViewById(R.id.amPicker);
             picker2.setClockColor(getResources().getColor(R.color.clockColor));
-            picker2.setDialColor(getResources().getColor(R.color.clockColor));
-            picker2.initTime(9,0);
+            picker2.setDialColor(getResources().getColor(R.color.dialColor));
+            picker2.initTime(9,45);
             picker2.setTrackSize(20);
             picker2.setDialRadiusDP(60);
 

@@ -47,7 +47,7 @@ public class Picker extends View {
     private int canvasColor = Color.TRANSPARENT;
     private int trackSize = -1, dialRadiusDP = -1;
     private double angle, degrees;
-    private boolean isMoving, amPm, disableTouch, hourFormat, firstRun = true;
+    private boolean isMoving, amPm, disableTouch, hourFormat, firstRun = true, manuelAdjust;
     private String hStr, mStr, amPmStr;
 
     private TimeChangedListener timeListener;
@@ -163,14 +163,30 @@ public class Picker extends View {
             //get AM/PM
             if (hourFormat) {
                 hour = ((int) degrees / 15) % 24;
-                minutes = ((int) (degrees * 4)) % 60;
+
+                /**
+                 * When minutes are set programmatically, because of rounding issues,
+                 * new value of minutes might be different than the one is set.
+                 * To avoid that if statement checks if time setting is done programmatically or
+                 * by touch gestures.
+                 */
+                if(manuelAdjust){
+                    minutes = ((int) (degrees * 4)) % 60;
+                    manuelAdjust = false;
+                }
+
                 mStr = (minutes < 10) ? "0" + minutes : minutes + "";
                 amPmStr = "";
             } else {
                 hour = ((int) degrees / 30) % 12;
                 if (hour == 0) hour = 12;
-                //get Minutes
-                minutes = ((int) (degrees * 2)) % 60;
+
+                if(manuelAdjust){
+                    //get Minutes
+                    minutes = ((int) (degrees * 2)) % 60;
+                    manuelAdjust = false;
+                }
+
                 mStr = (minutes < 10) ? "0" + minutes : minutes + "";
                 //AM-PM
                 if ((hour == 12 && previousHour == 11) || (hour == 11 && previousHour == 12)) {
@@ -217,6 +233,8 @@ public class Picker extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (disableTouch || !isEnabled()) return false;
+
+        manuelAdjust = true;
 
         getParent().requestDisallowInterceptTouchEvent(true);
 
