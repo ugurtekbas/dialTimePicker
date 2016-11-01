@@ -21,7 +21,9 @@ import java.util.Date;
 import picker.ugurtekbas.com.library.R;
 
 /**
- * Created by ugurtekbas on 10.05.2015.
+ * Custom time picker which extends Android's  View class
+ * @author Ugur Tekbas
+ * on 10.05.2015.
  */
 public class Picker extends View {
 

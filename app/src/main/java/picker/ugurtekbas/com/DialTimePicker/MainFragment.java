@@ -14,6 +14,8 @@ import android.widget.TextView;
 import picker.ugurtekbas.com.Picker.Picker;
 
 /**
+ * For sample app, his controls two fragments with different time pickers.
+ * @author Ugur Tekbas
  */
 public class MainFragment extends Fragment{
 

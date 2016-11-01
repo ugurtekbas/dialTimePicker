@@ -8,7 +8,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-
+/**
+ * Main class for sample app, creates viewpager and set pages.
+ * @author Ugur Tekbas
+ */
 public class Main extends ActionBarActivity {
 
     private ActionBar actionBar;
