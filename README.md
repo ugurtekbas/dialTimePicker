@@ -26,7 +26,7 @@ repositories {
 Add the dependency in your build file (do not forget to specify the correct qualifier, usually 'aar'):
 ```groovy
 dependencies {
-    compile 'com.github.ugurtekbas:dialTimePicker:69ba769f45'
+    compile 'com.github.ugurtekbas:dialTimePicker:93a2a8ab75'
 }
 ```
 
