@@ -14,14 +14,13 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
-
 import java.util.Calendar;
 import java.util.Date;
 
 import picker.ugurtekbas.com.library.R;
 
 /**
- * Custom time picker which extends Android's  View class
+ * Custom time picker which extends Android's View class
  * @author Ugur Tekbas
  * on 10.05.2015.
  */
@@ -30,6 +29,9 @@ public class Picker extends View {
     private final Paint paint;
     private final RectF rectF;
     private final Xfermode dialXferMode = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
+    private static final int AN_HOUR_AS_MINUTES = 60;
+    private static final int A_DAY_AS_HOURS = 24;
+    private static final int HALF_DAY_AS_HOURS = 12;
 
     private float min, radius, dialRadius, offset, slopX, slopY, dialX, dialY;
     private int hour, minutes, previousHour;
@@ -154,7 +156,7 @@ public class Picker extends View {
 
             //get AM/PM
             if (hourFormat) {
-                hour = ((int) degrees / 15) % 24;
+                hour = ((int) degrees / 15) % A_DAY_AS_HOURS;
                 /**
                  * When minutes are set programmatically, because of rounding issues,
                  * new value of minutes might be different than the one is set.
@@ -162,7 +164,7 @@ public class Picker extends View {
                  * by touch gestures.
                  */
                 if(manuelAdjust){
-                    minutes = ((int) (degrees * 4)) % 60;
+                    minutes = ((int) (degrees * 4)) % AN_HOUR_AS_MINUTES;
                     manuelAdjust = false;
                 }
 
@@ -171,7 +173,7 @@ public class Picker extends View {
             } else {
                 if(manuelAdjust){
                     //get Minutes
-                    minutes = ((int) (degrees * 2)) % 60;
+                    minutes = ((int) (degrees * 2)) % AN_HOUR_AS_MINUTES;
                     manuelAdjust = false;
                 }else{
                     /**
@@ -181,13 +183,13 @@ public class Picker extends View {
                      */
                     if(amPm && hour > 11){
                         amPm = !amPm;
-                    }else if(!amPm && (hour < 12 || hour == 24)){
+                    }else if(!amPm && (hour < HALF_DAY_AS_HOURS || hour == A_DAY_AS_HOURS)){
                         amPm = !amPm;
                     }
                 }
 
-                hour = ((int) degrees / 30) % 12;
-                if (hour == 0) hour = 12;
+                hour = ((int) degrees / 30) % HALF_DAY_AS_HOURS;
+                if (hour == 0) hour = HALF_DAY_AS_HOURS;
 
                 mStr = (minutes < 10) ? "0" + minutes : minutes + "";
                 //AM-PM
@@ -380,13 +382,17 @@ public class Picker extends View {
         this.timeListener = timeChangedListener;
     }
 
-    /***
+    /**
      * This method is used to set picker's time
      * @param hour
-     * @param minutes
+     * @param minute
      */
-    public void setTime(int hour, int minutes){
-        initTime(hour,minutes);
+    public void setTime(int hour, int minute){
+        if(!isTimeValid(hour, minute, true)){
+            throw new IllegalStateException(getResources().getString(R.string.outOfRangeExceptionMessage));
+        }
+
+        initTime(hour,minute);
         this.invalidate();
     }
 
@@ -402,19 +408,36 @@ public class Picker extends View {
         mStr = (minutes < 10) ? "0" + minutes : minutes + "";
         if (hourFormat) {
             amPmStr = "";
-            degrees = ((hour % 24) * 15) + ((minutes % 60) / 4);
+            degrees = ((hour % A_DAY_AS_HOURS) * 15) + ((minutes % AN_HOUR_AS_MINUTES) / 4);
         } else {
-            if (hour == 0) hour = 12;
+            if (hour == 0) hour = HALF_DAY_AS_HOURS;
             if ((hour == 12 && previousHour == 11) || (hour == 11 && previousHour == 12)) {
                 amPm = !amPm;
             }
 
             amPmStr = amPm ? "AM" : "PM";
-            degrees = ((hour % 12) * 30) + ((minutes % 60) / 2);
+            degrees = ((hour % HALF_DAY_AS_HOURS) * 30) + ((minutes % AN_HOUR_AS_MINUTES) / 2);
         }
         angle = Math.toRadians(degrees) - (Math.PI / 2);
 
         firstRun = false;
+    }
+
+    /**
+     * Checks if time values are between valid range
+     * @param hour
+     * @param minute
+     * @param is24Hour if time is set as 24hour format
+     * @return true if value is valid, false otherwise
+     */
+    private boolean isTimeValid(int hour, int minute, boolean is24Hour){
+        if(is24Hour){
+            return ((hour >= 0 && hour <= A_DAY_AS_HOURS)
+                    && (minute >= 0 && minute <= AN_HOUR_AS_MINUTES));
+        }else{
+            return ((hour >= 0 && hour <= HALF_DAY_AS_HOURS)
+                    && (minute >= 0 && minute <= AN_HOUR_AS_MINUTES));
+        }
     }
 
 }
