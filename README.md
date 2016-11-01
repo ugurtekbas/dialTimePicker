@@ -2,7 +2,7 @@
 A custom time picker library for Android.
 <br>
 As a result of needing a fixed time picker for pre-lollipop devices, for my
-[alarm app](https://play.google.com/store/apps/details?id=com.ugurtekbas.alarmshuffle) i developed a dial time picker view. 
+[alarm app](https://play.google.com/store/apps/details?id=com.ugurtekbas.alarmshuffle) i developed a dial time picker view.
 Calculations in the main class mostly based on [erz05's view.](https://github.com/erz05/TimePicker)
 
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-dialTimePicker-green.svg?style=true)](https://android-arsenal.com/details/1/3244)
@@ -37,7 +37,7 @@ dependencies {
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
-        
+
 <!-- or with some attributes in xml -->        
 <picker.ugurtekbas.com.Picker.Picker
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -55,7 +55,7 @@ dependencies {
 
 ```java
 Picker picker = (Picker) findViewById(R.id.picker);
-//or 
+//or
 Picker picker = new Picker(context);
 
 //Set background color
@@ -72,14 +72,14 @@ picker.setHourFormat(true);
 picker.getCurrentHour();
 //get current minutes
 picker.getCurrentMin();
-//Diasble/enable the picker 
+//Diasble/enable the picker
 picker.setEnabled(false);
 //Set dial's size
 picker.setTrackSize(20);
 //Set adjuster's size
-setDialRadiusDP(60);
+picker.setDialRadiusDP(60);
 //Initialize picker's time
-picker.initTime(9,0);
+picker.setTime(9,0);
 //Set TimeChangedListener
 picker.setTimeChangedListener(this);
 
