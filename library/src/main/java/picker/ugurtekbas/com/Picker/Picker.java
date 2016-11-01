@@ -153,7 +153,6 @@ public class Picker extends View {
             //get AM/PM
             if (hourFormat) {
                 hour = ((int) degrees / 15) % 24;
-
                 /**
                  * When minutes are set programmatically, because of rounding issues,
                  * new value of minutes might be different than the one is set.
@@ -168,14 +167,25 @@ public class Picker extends View {
                 mStr = (minutes < 10) ? "0" + minutes : minutes + "";
                 amPmStr = "";
             } else {
-                hour = ((int) degrees / 30) % 12;
-                if (hour == 0) hour = 12;
-
                 if(manuelAdjust){
                     //get Minutes
                     minutes = ((int) (degrees * 2)) % 60;
                     manuelAdjust = false;
+                }else{
+                    /**
+                     * To handle AM/PM decision when time is set with
+                     * 24 hour format integers in setTime()
+                     * e.g= setTime(21,35)
+                     */
+                    if(amPm && hour > 11){
+                        amPm = !amPm;
+                    }else if(!amPm && hour < 12){
+                        amPm = !amPm;
+                    }
                 }
+
+                hour = ((int) degrees / 30) % 12;
+                if (hour == 0) hour = 12;
 
                 mStr = (minutes < 10) ? "0" + minutes : minutes + "";
                 //AM-PM
@@ -383,7 +393,7 @@ public class Picker extends View {
      * @param hour
      * @param minutes
      */
-    public void initTime(int hour, int minutes) {
+    private void initTime(int hour, int minutes) {
         this.hour = hour;
         this.minutes = minutes;
         this.firstRun = true;
@@ -393,8 +403,10 @@ public class Picker extends View {
             degrees = ((hour % 24) * 15) + ((minutes % 60) / 4);
         } else {
             if (hour == 0) hour = 12;
-            if ((hour == 12 && previousHour == 11) || (hour == 11 && previousHour == 12))
+            if ((hour == 12 && previousHour == 11) || (hour == 11 && previousHour == 12)) {
                 amPm = !amPm;
+            }
+
             amPmStr = amPm ? "AM" : "PM";
             degrees = ((hour % 12) * 30) + ((minutes % 60) / 2);
         }

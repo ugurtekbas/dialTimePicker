@@ -48,7 +48,7 @@ public class MainFragment extends Fragment{
             final Picker  picker2 =   (Picker)v.findViewById(R.id.amPicker);
             picker2.setClockColor(getResources().getColor(R.color.clockColor));
             picker2.setDialColor(getResources().getColor(R.color.dialColor));
-            picker2.initTime(9,45);
+            picker2.setTime(19,45);
             picker2.setTrackSize(20);
             picker2.setDialRadiusDP(60);
 
