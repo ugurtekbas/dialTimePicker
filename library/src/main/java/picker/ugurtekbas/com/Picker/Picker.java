@@ -181,7 +181,7 @@ public class Picker extends View {
                      */
                     if(amPm && hour > 11){
                         amPm = !amPm;
-                    }else if(!amPm && hour < 12){
+                    }else if(!amPm && (hour < 12 || hour == 24)){
                         amPm = !amPm;
                     }
                 }
