@@ -32,6 +32,8 @@ public class Picker extends View {
     private static final int AN_HOUR_AS_MINUTES = 60;
     private static final int A_DAY_AS_HOURS = 24;
     private static final int HALF_DAY_AS_HOURS = 12;
+    public static final boolean AM = true;
+    public static final boolean PM = false;
 
     private float min, radius, dialRadius, offset, slopX, slopY, dialX, dialY;
     private int hour, minutes, previousHour;
@@ -77,7 +79,7 @@ public class Picker extends View {
 
     /**
      * Sets default theme attributes for picker
-     * These will be used if picker's attributes are'nt set
+     * These will be used if picker's attributes aren't set
      */
     private void loadAppThemeDefaults() {
         TypedValue typedValue = new TypedValue();
@@ -399,7 +401,7 @@ public class Picker extends View {
      * @param midday
      */
     public void setTime(int hour, int minute, boolean midday){
-        if(!isTimeValid(hour, minute, true)){
+        if(!isTimeValid(hour, minute, false)){
             throw new IllegalStateException(getResources().getString(R.string.outOfRangeExceptionMessage2));
         }
 
