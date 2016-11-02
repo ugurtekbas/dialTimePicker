@@ -40,5 +40,5 @@
     </declare-styleable>
 
     <string name="outOfRangeExceptionMessage"> Time value is out of range. \n "hour" value must be between 0 and 24, "minute" value must be between 0 and 60 </string>
-
+    <string name="outOfRangeExceptionMessage2"> Time value is out of range. \n "hour" value must be between 0 and 12, "minute" value must be between 0 and 60 </string>
 </resources>

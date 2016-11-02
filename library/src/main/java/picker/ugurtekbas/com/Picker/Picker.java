@@ -175,17 +175,6 @@ public class Picker extends View {
                     //get Minutes
                     minutes = ((int) (degrees * 2)) % AN_HOUR_AS_MINUTES;
                     manuelAdjust = false;
-                }else{
-                    /**
-                     * To handle AM/PM decision when time is set with
-                     * 24 hour format integers in setTime()
-                     * e.g= setTime(21,35)
-                     */
-                    if(amPm && hour > 11){
-                        amPm = !amPm;
-                    }else if(!amPm && (hour < HALF_DAY_AS_HOURS || hour == A_DAY_AS_HOURS)){
-                        amPm = !amPm;
-                    }
                 }
 
                 hour = ((int) degrees / 30) % HALF_DAY_AS_HOURS;
@@ -392,7 +381,31 @@ public class Picker extends View {
             throw new IllegalStateException(getResources().getString(R.string.outOfRangeExceptionMessage));
         }
 
-        initTime(hour,minute);
+        // To handle AM/PM decision when time is set
+        if(amPm && hour > 11){
+            amPm = !amPm;
+        }else if(!amPm && (hour < HALF_DAY_AS_HOURS || hour == A_DAY_AS_HOURS)){
+            amPm = !amPm;
+        }
+
+        this.initTime(hour,minute);
+        this.invalidate();
+    }
+
+    /**
+     * This method is used to set picker's time with AM/PM value
+     * @param hour
+     * @param minute
+     * @param midday
+     */
+    public void setTime(int hour, int minute, boolean midday){
+        if(!isTimeValid(hour, minute, true)){
+            throw new IllegalStateException(getResources().getString(R.string.outOfRangeExceptionMessage2));
+        }
+
+        this.setHourFormat(false);
+        this.amPm = midday;
+        this.initTime(hour,minute);
         this.invalidate();
     }
 
