@@ -43,7 +43,7 @@ public class Picker extends View {
     private int canvasColor = Color.TRANSPARENT;
     private int trackSize = -1, dialRadiusDP = -1;
     private double angle, degrees;
-    private boolean isMoving, amPm, disableTouch, hourFormat, firstRun = true, manuelAdjust;
+    private boolean isMoving, amPm, disableTouch, hourFormat, firstRun = true, manualAdjust;
     private String hStr, mStr, amPmStr;
 
     private TimeChangedListener timeListener;
@@ -165,18 +165,18 @@ public class Picker extends View {
                  * To avoid that if statement checks if time setting is done programmatically or
                  * by touch gestures.
                  */
-                if(manuelAdjust){
+                if(manualAdjust){
                     minutes = ((int) (degrees * 4)) % AN_HOUR_AS_MINUTES;
-                    manuelAdjust = false;
+                    manualAdjust = false;
                 }
 
                 mStr = (minutes < 10) ? "0" + minutes : minutes + "";
                 amPmStr = "";
             } else {
-                if(manuelAdjust){
+                if(manualAdjust){
                     //get Minutes
                     minutes = ((int) (degrees * 2)) % AN_HOUR_AS_MINUTES;
-                    manuelAdjust = false;
+                    manualAdjust = false;
                 }
 
                 hour = ((int) degrees / 30) % HALF_DAY_AS_HOURS;
@@ -228,7 +228,7 @@ public class Picker extends View {
     public boolean onTouchEvent(MotionEvent event) {
         if (disableTouch || !isEnabled()) return false;
 
-        manuelAdjust = true;
+        manualAdjust = true;
 
         getParent().requestDisallowInterceptTouchEvent(true);
 
