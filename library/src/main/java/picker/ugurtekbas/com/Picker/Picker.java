@@ -16,7 +16,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import java.util.Calendar;
 import java.util.Date;
-
 import picker.ugurtekbas.com.library.R;
 
 /**
@@ -265,9 +264,10 @@ public class Picker extends View {
                 }
                 break;
             case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
                 isMoving = false;
                 invalidate();
+                break;
+            case MotionEvent.ACTION_CANCEL:
                 break;
         }
 
@@ -409,6 +409,15 @@ public class Picker extends View {
         this.amPm = midday;
         this.initTime(hour,minute);
         this.invalidate();
+    }
+
+    /**
+     * This method is used to set picker's time with calendar object
+     * @param inCalendar
+     */
+    public void setTime(Calendar inCalendar){
+        boolean midday = inCalendar.get(Calendar.AM_PM) == 0;
+        this.setTime(inCalendar.get(Calendar.HOUR),inCalendar.get(Calendar.MINUTE), midday);
     }
 
     /***
