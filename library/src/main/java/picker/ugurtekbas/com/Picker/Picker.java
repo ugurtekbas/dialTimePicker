@@ -375,6 +375,15 @@ public class Picker extends View {
 
     /**
      * This method is used to set picker's time
+     * @param calendar
+     */
+    public void setTime(Calendar calendar){
+        this.amPm = calendar.get(Calendar.AM_PM) == 0;
+        this.setTime(calendar.get(Calendar.HOUR),calendar.get(Calendar.MINUTE));
+    }
+
+    /***
+     * This method is used to set picker's time
      * @param hour
      * @param minute
      */
