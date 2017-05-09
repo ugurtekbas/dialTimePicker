@@ -68,9 +68,9 @@ picker.setClockColor(Color.CYAN);
 picker.setTextColor(Color.BLACK);
 //Enable 24 or 12 hour clock
 picker.setHourFormat(true);
-//get current hour
+//Get current hour
 picker.getCurrentHour();
-//get current minutes
+//Get current minutes
 picker.getCurrentMin();
 //Diasble/enable the picker
 picker.setEnabled(false);
@@ -80,6 +80,10 @@ picker.setTrackSize(20);
 picker.setDialRadiusDP(60);
 //Initialize picker's time
 picker.setTime(9,0);
+//Set picker's time with calendar object
+picker.setTime(Calendar.getInstance());
+//Set dialAdjust to adjust time by touching on clock's dial
+picker.setDialAdjust(true);
 //Set TimeChangedListener
 picker.setTimeChangedListener(this);
 
@@ -89,7 +93,7 @@ public void timeChanged(Date date){
 
 ```
 <H2>License</H2>
-    Copyright 2016 Ugur Tekbas
+    Copyright 2017 Ugur Tekbas
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
