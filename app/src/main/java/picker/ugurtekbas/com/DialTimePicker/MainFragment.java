@@ -64,6 +64,7 @@ public class MainFragment extends Fragment{
             });
         }else{
             final Picker  picker1 =   (Picker)v.findViewById(R.id.picker);
+            picker1.setDialAdjust(false);
             final TextView et =  (TextView)v.findViewById(R.id.et);
             final Button btn  =   (Button)v.findViewById(R.id.btn);
 
