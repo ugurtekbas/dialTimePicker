@@ -11,11 +11,14 @@ import android.graphics.RectF;
 import android.graphics.Xfermode;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+
 import java.util.Calendar;
 import java.util.Date;
+
 import picker.ugurtekbas.com.library.R;
 
 /**
@@ -34,7 +37,7 @@ public class Picker extends View {
     public static final boolean AM = true;
     public static final boolean PM = false;
 
-    private float min, radius, dialRadius, offset, slopX, slopY, dialX, dialY;
+    private float min, radius, dialRadius, offset, slopX, slopY, dialX, dialY, dialStrokeWidth;
     private int hour, minutes, previousHour;
     private int textColor = Color.BLACK;
     private int clockColor = Color.parseColor("#0f9280");
@@ -42,7 +45,7 @@ public class Picker extends View {
     private int canvasColor = Color.TRANSPARENT;
     private int trackSize = -1, dialRadiusDP = -1;
     private double angle, degrees;
-    private boolean isMoving, amPm, disableTouch, hourFormat, firstRun = true, manualAdjust;
+    private boolean isMoving, amPm, disableTouch, hourFormat, firstRun = true, manualAdjust, dialAdjust = true;
     private String hStr, mStr, amPmStr;
 
     private TimeChangedListener timeListener;
@@ -204,7 +207,8 @@ public class Picker extends View {
 
         //clocks dial
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(trackSize != -1 ? trackSize : min / 25);
+        dialStrokeWidth = trackSize != -1 ? trackSize : min / 25;
+        paint.setStrokeWidth(dialStrokeWidth);
         paint.setColor(clockColor);
         paint.setAlpha(isEnabled() ? paint.getAlpha() : 77);
         canvas.drawOval(rectF, paint);
@@ -228,7 +232,6 @@ public class Picker extends View {
         if (disableTouch || !isEnabled()) return false;
 
         manualAdjust = true;
-
         getParent().requestDisallowInterceptTouchEvent(true);
 
         float posX = event.getX() - offset;
@@ -246,6 +249,15 @@ public class Picker extends View {
                     slopY = posY - dialY;
                     isMoving = true;
                     invalidate();
+                } else if(dialAdjust){
+                    float xSqr = (float)Math.pow(posX,2);
+                    float ySqr = (float)Math.pow(posY,2);
+                    float distance = (float)Math.sqrt(xSqr + ySqr);
+                    //check if touched point is on dial
+                    if(distance <= (radius + dialStrokeWidth) && distance >= (radius - dialStrokeWidth)){
+                        angle = (float) Math.atan2(posY, posX);
+                        invalidate();
+                    }
                 } else {
                     getParent().requestDisallowInterceptTouchEvent(false);
                     return false;
@@ -464,4 +476,19 @@ public class Picker extends View {
         }
     }
 
+    /**
+     * Getter for dialAdjust
+     * @return dialAdjust
+     */
+    public boolean isDialAdjust() {
+        return dialAdjust;
+    }
+
+    /**
+     * To enable adjusting time by touching on clock's dial
+     * @param dialAdjust
+     */
+    public void setDialAdjust(boolean dialAdjust) {
+        this.dialAdjust = dialAdjust;
+    }
 }
