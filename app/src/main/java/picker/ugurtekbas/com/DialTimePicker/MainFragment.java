@@ -3,6 +3,7 @@ package picker.ugurtekbas.com.DialTimePicker;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +12,16 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import java.util.Date;
+
 import picker.ugurtekbas.com.Picker.Picker;
+import picker.ugurtekbas.com.Picker.TimeChangedListener;
 
 /**
  * For sample app, his controls two fragments with different time pickers.
  * @author Ugur Tekbas
  */
-public class MainFragment extends Fragment{
+public class MainFragment extends Fragment implements TimeChangedListener{
 
     int layoutID;
 
@@ -51,7 +55,7 @@ public class MainFragment extends Fragment{
             picker2.setClockColor(getResources().getColor(R.color.clockColor));
             picker2.setDialColor(getResources().getColor(R.color.dialColor));
             picker2.setTime(12, 45, Picker.AM);
-            picker2.setTrackSize(20);
+            picker2.setTrackSize(2);
             picker2.setDialRadiusDP(60);
 
             final CheckBox checkBox =   (CheckBox)v.findViewById(R.id.checkbox);
@@ -65,6 +69,7 @@ public class MainFragment extends Fragment{
         }else{
             final Picker  picker1 =   (Picker)v.findViewById(R.id.picker);
             picker1.setDialAdjust(false);
+            picker1.setTimeChangedListener(this);
             final TextView et =  (TextView)v.findViewById(R.id.et);
             final Button btn  =   (Button)v.findViewById(R.id.btn);
 
@@ -81,5 +86,10 @@ public class MainFragment extends Fragment{
         }
 
         return v;
+    }
+
+    @Override
+    public void timeChanged(Date date) {
+        Log.i("Time changed: ", date.toString());
     }
 }
