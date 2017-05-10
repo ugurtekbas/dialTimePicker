@@ -256,6 +256,9 @@ public class Picker extends View {
                     //check if touched point is on dial
                     if(distance <= (radius + dialStrokeWidth) && distance >= (radius - dialStrokeWidth)){
                         angle = (float) Math.atan2(posY, posX);
+                        if (timeListener != null) {
+                            timeListener.timeChanged(getTime());
+                        }
                         invalidate();
                     }
                 } else {
