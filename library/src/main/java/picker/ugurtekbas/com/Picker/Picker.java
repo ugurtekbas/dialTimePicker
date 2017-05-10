@@ -91,9 +91,9 @@ public class Picker extends View {
                 android.R.attr.textColorPrimary,
                 R.attr.colorControlNormal});
 
-        dialColor = a.getColor(0, dialColor);
-        textColor = a.getColor(1, textColor);
-        clockColor = a.getColor(2, clockColor);
+        setDialColor(a.getColor(0, dialColor));
+        setTextColor(a.getColor(1, textColor));
+        setClockColor(a.getColor(2, clockColor));
 
         a.recycle();
     }
@@ -107,13 +107,13 @@ public class Picker extends View {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.Picker);
 
             if (typedArray != null) {
-                textColor = typedArray.getColor(R.styleable.Picker_textColor, textColor);
-                dialColor = typedArray.getColor(R.styleable.Picker_dialColor, dialColor);
-                clockColor = typedArray.getColor(R.styleable.Picker_clockColor, clockColor);
-                canvasColor = typedArray.getColor(R.styleable.Picker_canvasColor, canvasColor);
-                hourFormat = typedArray.getBoolean(R.styleable.Picker_hourFormat, hourFormat);
-                trackSize = typedArray.getDimensionPixelSize(R.styleable.Picker_trackSize, trackSize);
-                dialRadiusDP = typedArray.getDimensionPixelSize(R.styleable.Picker_dialRadius, dialRadiusDP);
+                setTextColor(typedArray.getColor(R.styleable.Picker_textColor, textColor));
+                setDialColor(typedArray.getColor(R.styleable.Picker_dialColor, dialColor));
+                setClockColor(typedArray.getColor(R.styleable.Picker_clockColor, clockColor));
+                setCanvasColor(typedArray.getColor(R.styleable.Picker_canvasColor, canvasColor));
+                setHourFormat(typedArray.getBoolean(R.styleable.Picker_hourFormat, hourFormat));
+                setTrackSize(typedArray.getDimensionPixelSize(R.styleable.Picker_trackSize, trackSize));
+                setDialRadiusDP(typedArray.getDimensionPixelSize(R.styleable.Picker_dialRadius, dialRadiusDP));
 
                 typedArray.recycle();
             }
@@ -207,8 +207,8 @@ public class Picker extends View {
 
         //clocks dial
         paint.setStyle(Paint.Style.STROKE);
-        dialStrokeWidth = trackSize != -1 ? trackSize : min / 25;
-        paint.setStrokeWidth(dialStrokeWidth);
+        setTrackSize(trackSize);
+        paint.setStrokeWidth(trackSize);
         paint.setColor(clockColor);
         paint.setAlpha(isEnabled() ? paint.getAlpha() : 77);
         canvas.drawOval(rectF, paint);
@@ -254,7 +254,7 @@ public class Picker extends View {
                     float ySqr = (float)Math.pow(posY,2);
                     float distance = (float)Math.sqrt(xSqr + ySqr);
                     //check if touched point is on dial
-                    if(distance <= (radius + dialStrokeWidth) && distance >= (radius - dialStrokeWidth)){
+                    if(distance <= (radius + trackSize) && distance >= (radius - trackSize)){
                         angle = (float) Math.atan2(posY, posX);
                         if (timeListener != null) {
                             timeListener.timeChanged(getTime());
@@ -339,10 +339,15 @@ public class Picker extends View {
 
     /**
      * To set dial's size
-     * @param trackSize
+     * @param inTrackSize
      */
-    public void setTrackSize(int trackSize) {
-        this.trackSize = trackSize;
+    public void setTrackSize(int inTrackSize) {
+        if(inTrackSize < 0 || inTrackSize > (2 * dialRadiusDP)){
+            //track's default size
+            this.trackSize = (int)(min / 25);
+        }else{
+            this.trackSize = inTrackSize;
+        }
     }
 
     /**
