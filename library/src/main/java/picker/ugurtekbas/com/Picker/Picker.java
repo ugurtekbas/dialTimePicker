@@ -11,7 +11,6 @@ import android.graphics.RectF;
 import android.graphics.Xfermode;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,7 +36,7 @@ public class Picker extends View {
     public static final boolean AM = true;
     public static final boolean PM = false;
 
-    private float min, radius, dialRadius, offset, slopX, slopY, dialX, dialY, dialStrokeWidth;
+    private float min, radius, dialRadius, offset, slopX, slopY, dialX, dialY;
     private int hour, minutes, previousHour;
     private int textColor = Color.BLACK;
     private int clockColor = Color.parseColor("#0f9280");
@@ -137,7 +136,8 @@ public class Picker extends View {
         offset = min * 0.5f;
         float padding = min / 20;
         radius = min / 2 - (padding * 2);
-        dialRadius = dialRadiusDP != -1 ? dialRadiusDP : radius / 7;
+        setDialRadiusDP(dialRadiusDP);
+        dialRadius = dialRadiusDP;
         rectF.set(-radius, -radius, radius, radius);
     }
 
@@ -342,8 +342,10 @@ public class Picker extends View {
      * @param inTrackSize
      */
     public void setTrackSize(int inTrackSize) {
-        if(inTrackSize < 0 || inTrackSize > (2 * dialRadiusDP)){
-            //track's default size
+        //track's default size
+        if(inTrackSize <= 0){
+            this.trackSize = (int)(min / 25);
+        }else if(dialRadiusDP > 0 && inTrackSize > (2 * dialRadiusDP)){
             this.trackSize = (int)(min / 25);
         }else{
             this.trackSize = inTrackSize;
@@ -352,10 +354,15 @@ public class Picker extends View {
 
     /**
      * To set adjuster's size
-     * @param dialRadiusDP
+     * @param inDialRadiusDP
      */
-    public void setDialRadiusDP(int dialRadiusDP) {
-        this.dialRadiusDP = dialRadiusDP;
+    public void setDialRadiusDP(int inDialRadiusDP) {
+        //adjuster's default size
+        if(inDialRadiusDP <= 0 || inDialRadiusDP > 100){
+            this.dialRadiusDP = (int)(radius / 7);
+        }else{
+            this.dialRadiusDP = inDialRadiusDP;
+        }
     }
 
     /**
