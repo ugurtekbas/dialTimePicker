@@ -8,6 +8,7 @@
 
 #Intellij files
 *.iml
+.idea
 
 #Java class files
 *.class
