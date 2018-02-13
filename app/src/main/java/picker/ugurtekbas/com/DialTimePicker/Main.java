@@ -2,8 +2,6 @@ package picker.ugurtekbas.com.DialTimePicker;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,7 +13,6 @@ import android.view.MenuItem;
  */
 public class Main extends AppCompatActivity {
 
-    private ActionBar actionBar;
     private ViewPager viewPager;
 
     @Override
@@ -23,8 +20,7 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        actionBar  = getSupportActionBar();
-        actionBar.setTitle(getResources().getString(R.string.appTitle));
+        getSupportActionBar().setTitle(getResources().getString(R.string.appTitle));
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         viewPager.setAdapter(new ActivityAdapter(getSupportFragmentManager()));
     }
