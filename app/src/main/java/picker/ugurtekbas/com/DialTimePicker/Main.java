@@ -2,8 +2,9 @@ package picker.ugurtekbas.com.DialTimePicker;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -12,7 +13,7 @@ import android.view.MenuItem;
  * Main class for sample app, creates viewpager and set pages.
  * @author Ugur Tekbas
  */
-public class Main extends ActionBarActivity {
+public class Main extends AppCompatActivity {
 
     private ActionBar actionBar;
     private ViewPager viewPager;
