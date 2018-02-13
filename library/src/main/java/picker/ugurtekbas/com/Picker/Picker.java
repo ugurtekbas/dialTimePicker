@@ -23,7 +23,6 @@ import picker.ugurtekbas.com.library.R;
 /**
  * Custom time picker which extends Android's View class
  * @author Ugur Tekbas
- * on 10.05.2015.
  */
 public class Picker extends View {
 
@@ -59,9 +58,7 @@ public class Picker extends View {
 
     public Picker(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        if (android.os.Build.VERSION.SDK_INT >= 11) {
-            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
         paint = new Paint();
         paint.setAntiAlias(true);
