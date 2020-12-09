@@ -83,9 +83,9 @@ public class Picker extends View {
         TypedValue typedValue = new TypedValue();
 
         TypedArray a = getContext().obtainStyledAttributes(typedValue.data, new int[]{
-                R.attr.colorAccent,
+                android.R.attr.textColorPrimaryInverse,
                 android.R.attr.textColorPrimary,
-                R.attr.colorControlNormal});
+                android.R.attr.colorControlNormal});
 
         setDialColor(a.getColor(0, dialColor));
         setTextColor(a.getColor(1, textColor));
