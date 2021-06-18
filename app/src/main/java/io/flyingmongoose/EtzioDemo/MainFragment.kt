@@ -1,4 +1,4 @@
-package picker.ugurtekbas.com.DialTimePicker
+package io.flyingmongoose.EtzioDemo
 
 import android.os.Bundle
 import android.util.Log
@@ -9,15 +9,17 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import picker.ugurtekbas.com.Picker.Picker
-import picker.ugurtekbas.com.Picker.TimeChangedListener
+import io.flyingmongoose.EtzioTimePicker.Picker
+import io.flyingmongoose.EtzioTimePicker.TimeChangedListener
 import java.util.*
 
-class MainFragment : Fragment(), TimeChangedListener {
+class MainFragment : Fragment(), TimeChangedListener
+{
 
     companion object {
         const val idKey = "layoutID"
-        fun newInstance(layoutID: Int): MainFragment {
+        fun newInstance(layoutID: Int): MainFragment
+        {
             val fragment = MainFragment()
             fragment.layoutID = layoutID
             return fragment
@@ -44,7 +46,7 @@ class MainFragment : Fragment(), TimeChangedListener {
             with(v.findViewById<View>(R.id.amPicker) as Picker) {
                 setClockColor(resources.getColor(R.color.clockColor))
                 setDialColor(resources.getColor(R.color.dialColor))
-                setTime(12, 45, Picker.AM)
+                setTime(12, 45, io.flyingmongoose.EtzioTimePicker.Picker.AM)
                 setTrackSize(20)
                 setDialRadiusDP(60)
                 val checkBox = v.findViewById<View>(R.id.checkbox) as CheckBox
@@ -53,8 +55,7 @@ class MainFragment : Fragment(), TimeChangedListener {
             }
         } else {
             val picker = v.findViewById<View>(R.id.picker) as Picker
-            picker.isDialAdjust = false
-            picker.timeListener = this
+            picker.setTimeChangedListener(this)
             val et = v.findViewById<View>(R.id.et) as TextView
             val btn = v.findViewById<View>(R.id.btn) as Button
             btn.setOnClickListener {

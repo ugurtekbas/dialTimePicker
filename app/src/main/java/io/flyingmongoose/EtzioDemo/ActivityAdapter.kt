@@ -1,4 +1,4 @@
-package picker.ugurtekbas.com.DialTimePicker
+package io.flyingmongoose.EtzioDemo
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
